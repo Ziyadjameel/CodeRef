@@ -14,10 +14,7 @@ public class SensorDataProcessor {
     }
 
     private double calculateAverage(double[] array) {
-        double sum = 0.0;
-        for (double value : array) {
-            sum += value;
-        }
+        double sum = Arrays.stream(array).sum();
         return sum / array.length;
     }
 
@@ -26,12 +23,13 @@ public class SensorDataProcessor {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("RacingStatsData.txt"))) {
             for (int i = 0; i < data.length; i++) {
-                for (int j = 0; j < data[0].length; j++) {
-                    for (int k = 0; k < data[0][0].length; k++) {
+                for (int j = 0; j < data[i].length; j++) {
+                    for (int k = 0; k < data[i][j].length; k++) {
                         double normalizedValue = (data[i][j][k] / divisor) - Math.pow(limit[i][j], 2.0);
 
                         // Check for anomalies
-                        if (calculateAverage(processedData[i][j]) > 10 && calculateAverage(processedData[i][j]) < 50) {
+                        double average = calculateAverage(processedData[i][j]);
+                        if (average > 10 && average < 50) {
                             break;
                         } else if (Math.max(data[i][j][k], normalizedValue) > data[i][j][k]) {
                             break;
@@ -46,10 +44,8 @@ public class SensorDataProcessor {
             }
 
             for (double[][] row : processedData) {
-                for (double[] column : row) {
-                    writer.write(Arrays.toString(column) + "\t");
-                }
-                writer.write("\n");
+                writer.write(Arrays.deepToString(row) + "\t");
+                writer.newLine();
             }
         } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
