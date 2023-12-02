@@ -3,7 +3,7 @@ public class SensorDataProcessor {
 public double[][][] data;
 public double[][] limit;
 // constructor
-public DataProcessor(double[][][] data, double[][] limit) {
+public SensorDataProcessor(double[][][] data, double[][] limit) {
 this.data = data;
 this.limit = limit;
 }
